@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>ÁREA DO AGENTE — NEOTHEON | Égide de Avalon</title>
+  
+  <!-- Meta & OpenGraph -->
+  <meta name="description" content="Construtor de Fichas YAML, Loja Oficial de Bênçãos por Classe dos Perpétuos e Guia Canônico de Materiais e Ferros do Submundo da Égide de Avalon.">
+  <meta property="og:title" content="ÁREA DO AGENTE — NEOTHEON">
+  <meta property="og:description" content="Fichário Oficial para Discord, Loja das 7 Classes e Metais Ctônicos dos Cinco Rios.">
+  <meta property="og:image" content="assets/valiria_mission.jpg">
+  <meta name="theme-color" content="#050608">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            'gold-primary': '#d4af37',
+            'gold-light': '#f1d27a',
+            'gold-dim': '#8c6a2b',
+            'dark-bg': '#050608',
+            'dark-surface': '#0a0912',
+            'dark-veil': '#0f0e1a',
+            'crimson-pure': '#c82924',
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- GSAP Animation Library CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+
+  <!-- Custom Stylesheet -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-[#050608] text-[#e2ded6] min-h-screen relative antialiased">
+
+  <!-- Dynamic WebGL Volumetric Mist Canvas -->
+  <canvas id="fog-canvas"></canvas>
+
+    <!-- ── GLOBAL HEADER ── -->
+  <header class="santioni-header">
+    <a href="index.html" class="brand-badge">
+      <div class="brand-crest">N</div>
+      <div class="brand-text">
+        <span class="brand-name">NEOTHEON</span>
+        <span class="brand-sub">Égide de Avalon</span>
+      </div>
+    </a>
+
+    <div class="flex items-center gap-3 sm:gap-4">
+      <nav class="santioni-nav-pill" aria-label="Navegação Principal">
+        <a href="index.html" >INÍCIO</a>
+        <span class="pill-ornament">❖</span>
+        <a href="universo.html" >UNIVERSO</a>
+        <span class="pill-ornament">❖</span>
+        <a href="poderes.html" >PODERES</a>
+        <span class="pill-ornament">❖</span>
+        <a href="operacoes.html" >OPERAÇÕES</a>
+        <span class="pill-ornament">❖</span>
+        <a href="banners.html" class="hover:text-[#f1d27a]">BANNERS</a>
+        <span class="pill-ornament">❖</span>
+        <a href="sistema.html" >SISTEMA</a>
+        <span class="pill-ornament">❖</span>
+        <a href="agente.html" class="active text-[#f1d27a]">AGENTE</a>
+        <span class="pill-ornament">❖</span>
+        <a href="endgame.html" class="text-red-400 hover:text-red-300">ENDGAME</a>
+      </nav>
+
+      <a href="https://discord.gg/4vMxwCKwpg" target="_blank" rel="noopener noreferrer" class="hidden sm:inline-flex btn-gold px-4 py-2 rounded text-[10px] tracking-widest font-bold">
+        DISCORD ↗
+      </a>
+
+      <button id="mobile-menu-btn" class="lg:hidden text-[#cfc7b4] hover:text-white p-1 text-2xl font-mono-code focus:outline-none" aria-label="Abrir menu mobile">
+        ☰
+      </button>
+    </div>
+  </header>
+
+  <!-- Audio Equalizer Floating Button -->
+  <button id="audio-toggle-btn" class="audio-toggle-btn" title="Toggle Áudio Atmosférico da Égide">
+    <div class="audio-bars">
+      <div class="audio-bar"></div>
+      <div class="audio-bar"></div>
+      <div class="audio-bar"></div>
+    </div>
+  </button>
+
+    <!-- Mobile Drawer Menu -->
+  <div id="mobile-menu" class="hidden lg:hidden fixed top-20 left-0 w-full z-50 bg-[#050608]/98 border-b border-[#d4af37]/20 px-6 py-6 space-y-3 text-xs font-cinzel uppercase tracking-widest backdrop-blur-xl">
+    <a href="index.html" class="block py-2 text-[#cfc7b4] hover:text-white">Início</a>
+    <a href="universo.html" class="block py-2 text-[#cfc7b4] hover:text-white">Universo & Cosmologia</a>
+    <a href="poderes.html" class="block py-2 text-[#cfc7b4] hover:text-white">Poderes & Individualidades</a>
+    <a href="operacoes.html" class="block py-2 text-[#cfc7b4] hover:text-white">❖ Operações (Missões)</a>
+    <a href="banners.html" class="block py-2 text-[#cfc7b4] hover:text-white">✦ Banners Míticos</a>
+    <a href="operacoes.html?view=novato" class="block py-2 text-[#cfc7b4] hover:text-[#f1d27a]">◈ Novato Premium</a>
+    <a href="sistema.html" class="block py-2 text-[#cfc7b4] hover:text-white">Sistema & Guias</a>
+    <a href="agente.html" class="block py-2 text-[#f1d27a] font-bold">Área do Agente & Fichas</a>
+    <a href="endgame.html" class="block py-2 text-red-400 hover:text-red-300">Endgame (Zonas de Risco)</a>
+    <div class="pt-4 border-t border-white/10 flex flex-col gap-3">
+      <a href="https://discord.gg/4vMxwCKwpg" target="_blank" rel="noopener noreferrer" class="btn-gold text-center py-3 rounded">ENTRAR NO DISCORD</a>
+      <a href="https://yoble.us/Community/305085" target="_blank" rel="noopener noreferrer" class="btn-secondary-gold text-center py-2.5 rounded">COMUNIDADE YOBLE</a>
+    </div>
+  </div>
+
+  <main class="relative z-10 pt-28">
+
+    <!-- ── HERO SECTION ── -->
+    <section class="py-12 px-4 sm:px-6 lg:px-8 text-center relative max-w-5xl mx-auto">
+      <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#d4af37]/10 border border-[#d4af37]/30 text-[#f1d27a] text-[11px] font-mono-code uppercase tracking-widest mb-6">
+        <span>⚙️</span>
+        <span>TERMINAL DO AGENTE & ARSENAL DE AVALON</span>
+      </div>
+
+      <h1 class="font-cinzel text-3xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-white mb-6 leading-tight">
+        FICHÁRIO, LOJA & <span class="gold-gradient">MATERIAIS</span>
+      </h1>
+
+      <p class="text-base sm:text-lg text-[#cfc7b4] font-cormorant italic max-w-3xl mx-auto mb-8 leading-relaxed">
+        "O coração de qualquer combatente da Égide reside na precisão de sua ficha, nas bênçãos perpétuas que amplificam sua alma e nos metais nobres ou ctônicos forjados em seu aço."
+      </p>
+
+      <!-- Quick Subnav Pills -->
+      <div class="flex flex-wrap items-center justify-center gap-2 text-xs font-cinzel tracking-wider">
+        <a href="#fichario" class="px-3.5 py-1.5 rounded-full bg-white/5 border border-white/10 hover:border-[#d4af37]/50 hover:text-[#f1d27a] transition-all">Construtor de Ficha YAML</a>
+        <a href="#loja" class="px-3.5 py-1.5 rounded-full bg-white/5 border border-white/10 hover:border-[#d4af37]/50 hover:text-[#f1d27a] transition-all">Loja de Bênçãos das 7 Classes</a>
+        <a href="#materiais" class="px-3.5 py-1.5 rounded-full bg-white/5 border border-white/10 hover:border-[#d4af37]/50 hover:text-[#f1d27a] transition-all">Metais Nobres & Submundo</a>
+        <a href="#diretrizes" class="px-3.5 py-1.5 rounded-full bg-white/5 border border-white/10 hover:border-[#d4af37]/50 hover:text-[#f1d27a] transition-all">Regras de Baú & Vagas</a>
+      </div>
+    </section>
+
+    <!-- ── 1. FICHÁRIO INTERATIVO (CONSTRUTOR DE FICHA YAML PARA DISCORD) ── -->
+    <section id="fichario" class="py-12 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto border-t border-[#d4af37]/20">
+      <div class="glass-panel p-8 sm:p-12 rounded-2xl border border-[#d4af37]/40 shadow-2xl relative overflow-hidden">
+        
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8 border-b border-white/10 pb-6">
+          <div>
+            <span class="text-[10px] font-mono-code text-[#f1d27a] uppercase tracking-widest block mb-1">PROTOCOLO OFICIAL DE REGISTRO</span>
+            <h2 class="font-cinzel text-2xl sm:text-3xl font-bold text-white">CONSTRUTOR DE FICHA CANÔNICO</h2>
+          </div>
+          <div class="text-xs font-mono-code text-[#8c8270]">Formatação Padrão Discord / YAML</div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 text-xs font-mono-code mb-6">
+          <div>
+            <label class="block text-[#8c8270] mb-1">Nome do Personagem:</label>
+            <input type="text" id="builder-name" value="Aleron Vance" class="w-full bg-black/60 border border-white/20 rounded p-2 text-white">
+          </div>
+          <div>
+            <label class="block text-[#8c8270] mb-1">Idade do Semideus:</label>
+            <input type="number" id="builder-age" value="19" class="w-full bg-black/60 border border-white/20 rounded p-2 text-white">
+          </div>
+          <div>
+            <label class="block text-[#8c8270] mb-1">Panteão de Origem:</label>
+            <select id="builder-pantheon" class="w-full bg-black/60 border border-white/20 rounded p-2 text-white">
+              <option value="Greco-Romano">Greco-Romano</option>
+              <option value="Egípcio">Egípcio</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-[#8c8270] mb-1">Divindade Tutelar / Progenitor:</label>
+            <input type="text" id="builder-god" value="Ares / Marte" class="w-full bg-black/60 border border-white/20 rounded p-2 text-white">
+          </div>
+          <div>
+            <label class="block text-[#8c8270] mb-1">Classe do Perpétuo:</label>
+            <select id="builder-class" class="w-full bg-black/60 border border-white/20 rounded p-2 text-white">
+              <option value="Destruição">Destruição</option>
+              <option value="Destino">Destino</option>
+              <option value="Morte">Morte</option>
+              <option value="Sonho">Sonho</option>
+              <option value="Desespero">Desespero</option>
+              <option value="Desejo">Desejo</option>
+              <option value="Delírio">Delírio</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-[#8c8270] mb-1">Ofício de Avalon:</label>
+            <select id="builder-job" class="w-full bg-black/60 border border-white/20 rounded p-2 text-white">
+              <option value="Custódio de Sangue">Custódio de Sangue</option>
+              <option value="Vigilante Noturno">Vigilante Noturno</option>
+              <option value="Sanctificador">Sanctificador</option>
+              <option value="Arcanista">Arcanista</option>
+              <option value="Artífice de Ébano">Artífice de Ébano</option>
+              <option value="Inquisidor">Inquisidor</option>
+              <option value="Tecelão do Véu">Tecelão do Véu</option>
+              <option value="Arquivista de Avalon">Arquivista de Avalon</option>
+              <option value="Mediador">Mediador</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs font-mono-code mb-6">
+          <div>
+            <label class="block text-[#8c8270] mb-1">Arma Inicial & Metal:</label>
+            <input type="text" id="builder-weapon" value="Glaive de Prata Estelar (+10 ATK)" class="w-full bg-black/60 border border-white/20 rounded p-2 text-white">
+          </div>
+          <div>
+            <label class="block text-[#8c8270] mb-1">Photoplayer Sugerido:</label>
+            <input type="text" id="builder-faceclaim" value="Ator / Modelo / Ilustração Dark Fantasy" class="w-full bg-black/60 border border-white/20 rounded p-2 text-white">
+          </div>
+        </div>
+
+        <button id="generate-sheet-text-btn" class="w-full btn-gold py-3 rounded-xl font-cinzel font-bold tracking-widest text-xs mb-6">
+          GERAR FICHA COMPLETA FORMATADA PARA DISCORD 📋
+        </button>
+
+        <!-- Container de Exportação -->
+        <div id="sheet-export-container" class="hidden space-y-3">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-mono-code text-[#f1d27a] font-bold">CÓDIGO PRONTO PARA COPIAR:</span>
+            <button id="copy-sheet-btn" class="px-3 py-1 rounded bg-[#d4af37]/20 border border-[#d4af37]/40 text-[#f1d27a] text-[11px] font-mono-code hover:bg-[#d4af37]/40 transition-all">
+              COPIAR FICHA 📄
+            </button>
+          </div>
+          <textarea id="sheet-export-textarea" rows="14" readonly class="w-full bg-black/90 border border-white/20 rounded-xl p-4 font-mono-code text-xs text-[#e2ded6] leading-relaxed select-all"></textarea>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ── 2. LOJA OFICIAL DE BÊNÇÃOS POR CLASSE (DO DOC 1 OFICIAL) ── -->
+    <section id="loja" class="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-[#d4af37]/20">
+      
+      <div class="text-center max-w-3xl mx-auto mb-16">
+        <span class="text-[10px] font-mono-code px-3 py-1 rounded bg-[#d4af37]/10 border border-[#d4af37]/30 text-[#f1d27a] uppercase tracking-widest">
+          Catálogo Oficial • Doc 1 Canônico
+        </span>
+        <h2 class="font-cinzel text-3xl sm:text-4xl font-bold text-white mt-3 mb-2">LOJA DE BÊNÇÃOS DOS PERPÉTUOS</h2>
+        <p class="text-xs sm:text-sm text-[#cfc7b4] leading-relaxed">
+          O coração da build de cada jogador. Bênçãos autênticas agrupadas pelas 7 Classes dos Perpétuos com custos oficiais em Golds e regras de ativação.
+        </p>
+      </div>
+
+      <div class="space-y-12">
+
+        <!-- Classe 1: Destruição -->
+        <div class="space-y-4">
+          <div class="flex items-center gap-3 border-b border-red-500/30 pb-2">
+            <span class="text-xl">💥</span>
+            <h3 class="font-cinzel text-xl font-bold text-red-400">CLASSE: DESTRUIÇÃO</h3>
+            <span class="text-[10px] font-mono-code text-[#8c8270]">Foco em Dano Massivo & Escala Crítica</span>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <!-- Ira Carmesim -->
+            <div class="glass-card p-5 rounded-xl border border-white/10 hover:border-red-500/50 transition-all flex flex-col justify-between">
+              <div>
+                <div class="flex items-center justify-between mb-2">
+                  <h4 class="font-cinzel text-base font-bold text-white">Ira Carmesim</h4>
+                  <span class="text-xs font-mono-code text-[#f1d27a] font-bold">2.100 Golds</span>
+                </div>
+                <p class="text-xs text-[#cfc7b4] leading-relaxed mb-3">
+                  Nascida da essência primitiva da guerra. O corpo pulsa como um tambor de batalha e os olhos brilham em escarlate. Cada golpe deixa cortes de luz sólida no espaço.
+                </p>
+                <div class="bg-black/50 p-2.5 rounded text-[11px] font-mono-code text-[#8c8270] space-y-1">
+                  <div>✦ <strong>Passivo:</strong> +30 ATK e +30% Taxa Crítica</div>
+                  <div>✦ <strong>Frenesi (60 Mana):</strong> Dura 3 turnos. +10 ATK a cada 10% de HP perdido. CD: 1 turno.</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Predador Eterno -->
+            <div class="glass-card p-5 rounded-xl border border-white/10 hover:border-red-500/50 transition-all flex flex-col justify-between">
+              <div>
+                <div class="flex items-center justify-between mb-2">
+                  <h4 class="font-cinzel text-base font-bold text-white">Predador Eterno</h4>
+                  <span class="text-xs font-mono-code text-[#f1d27a] font-bold">2.300 Golds</span>
+                </div>
+                <p class="text-xs text-[#cfc7b4] leading-relaxed mb-3">
+                  O instinto da caça primal cristalizado. Movimentos ágeis e felinos. O tempo ao redor desacelera e golpes criam rajadas de impacto mecânico e distorções espaciais.
+                </p>
+                <div class="bg-black/50 p-2.5 rounded text-[11px] font-mono-code text-[#8c8270] space-y-1">
+                  <div>✦ <strong>Passivo:</strong> +24 SPD, +40 ATK e +20% Dano Crítico</div>
+                  <div>✦ <strong>Ativo (60 Mana):</strong> Rompe limites humanos gerando ondas de choque por 1 turno.</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Olho da Tempestade -->
+            <div class="glass-card p-5 rounded-xl border border-white/10 hover:border-red-500/50 transition-all flex flex-col justify-between">
+              <div>
+                <div class="flex items-center justify-between mb-2">
+                  <h4 class="font-cinzel text-base font-bold text-white">Olho da Tempestade</h4>
+                  <span class="text-xs font-mono-code text-[#f1d27a] font-bold">2.600 Golds</span>
+                </div>
+                <p class="text-xs text-[#cfc7b4] leading-relaxed mb-3">
+                  Nascida da queda de Saturno. Ao atingir o clímax, arrasta a presa para um limbo de tempestade eterna onde o inimigo é açoitado sem chances de defesa.
+                </p>
+                <div class="bg-black/50 p-2.5 rounded text-[11px] font-mono-code text-[#8c8270] space-y-1">
+                  <div>✦ <strong>Passivo:</strong> +32 SPD e +30 Dano Crítico</div>
+                  <div>✦ <strong>Clímax (150 Mana):</strong> Ao juntar 12 Aureus, desfere 3 golpes sem rolagem de defesa para monstros.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Classe 2: Destino -->
+        <div class="space-y-4">
+          <div class="flex items-center gap-3 border-b border-amber-500/30 pb-2">
+            <span class="text-xl">⚓</span>
+            <h3 class="font-cinzel text-xl font-bold text-amber-400">CLASSE: DESTINO</h3>
+            <span class="text-[10px] font-mono-code text-[#8c8270]">Foco em Postura Inabalável & Conversão de Defesa</span>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Maré Imutável -->
+            <div class="glass-card p-5 rounded-xl border border-white/10 hover:border-amber-500/50 transition-all flex flex-col justify-between">
+              <div>
+                <div class="flex items-center justify-between mb-2">
+                  <h4 class="font-cinzel text-base font-bold text-white">Maré Imutável</h4>
+                  <span class="text-xs font-mono-code text-[#f1d27a] font-bold">2.100 Golds</span>
+                </div>
+                <p class="text-xs text-[#cfc7b4] leading-relaxed mb-3">
+                  O mar não pede licença; ele vem e esmaga. A pele adquire o brilho de obsidiana molhada e golpes contra o usuário soam barulhentos mas inúteis.
+                </p>
+                <div class="bg-black/50 p-2.5 rounded text-[11px] font-mono-code text-[#8c8270] space-y-1">
+                  <div>✦ <strong>Passivo:</strong> +25% DEF e +40% Dano Crítico</div>
+                  <div>✦ <strong>Ativo (80 Mana):</strong> 200% da DEF convertida em ATK em básicos; ignora 20% DEF; reflete 10% DEF como Dano Verdadeiro. CD: 5 turnos.</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Abismo Silencioso -->
+            <div class="glass-card p-5 rounded-xl border border-white/10 hover:border-amber-500/50 transition-all flex flex-col justify-between">
+              <div>
+                <div class="flex items-center justify-between mb-2">
+                  <h4 class="font-cinzel text-base font-bold text-white">Abismo Silencioso</h4>
+                  <span class="text-xs font-mono-code text-[#f1d27a] font-bold">2.300 Golds</span>
+                </div>
+                <p class="text-xs text-[#cfc7b4] leading-relaxed mb-3">
+                  A calma opressiva da fossa abissal. O silêncio abafa a coragem adversária e impõe lentidão com a densidade de toneladas de água comprimida.
+                </p>
+                <div class="bg-black/50 p-2.5 rounded text-[11px] font-mono-code text-[#8c8270] space-y-1">
+                  <div>✦ <strong>Passivo:</strong> +20% DEF, +10% Taxa Crítica e +21 SPD</div>
+                  <div>✦ <strong>Ativo (90 Mana):</strong> Aplica Silêncio (inimigos não usam ativos por 1 turno se falharem em teste de Vontade d20 >= 8) e Fratura (-10 DEF).</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Classe 3: Sonho -->
+        <div class="space-y-4">
+          <div class="flex items-center gap-3 border-b border-indigo-500/30 pb-2">
+            <span class="text-xl">🌙</span>
+            <h3 class="font-cinzel text-xl font-bold text-indigo-400">CLASSE: SONHO</h3>
+            <span class="text-[10px] font-mono-code text-[#8c8270]">Foco em Suporte Coletivo, Ilusão & Sincronia</span>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <!-- Véu Onírico -->
+            <div class="glass-card p-5 rounded-xl border border-white/10 hover:border-indigo-500/50 transition-all flex flex-col justify-between">
+              <div>
+                <div class="flex items-center justify-between mb-2">
+                  <h4 class="font-cinzel text-base font-bold text-white">Véu Onírico</h4>
+                  <span class="text-xs font-mono-code text-[#f1d27a] font-bold">2.100 Golds</span>
+                </div>
+                <p class="text-xs text-[#cfc7b4] leading-relaxed mb-3">
+                  Manto tecido na fronteira entre vigília e sono. Aliados se veem inspirados em suas versões ideais, enquanto inimigos hesitam diante de fracassos ilusórios.
+                </p>
+                <div class="bg-black/50 p-2.5 rounded text-[11px] font-mono-code text-[#8c8270] space-y-1">
+                  <div>✦ <strong>Passivo:</strong> +30 SPD</div>
+                  <div>✦ <strong>Ativo (60 Mana):</strong> Aliados ganham +30% Taxa Crítica e +1 sucesso em defesas. Inimigos sofrem -2 em testes mentais.</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Lâmpada dos Sonhadores -->
+            <div class="glass-card p-5 rounded-xl border border-white/10 hover:border-indigo-500/50 transition-all flex flex-col justify-between">
+              <div>
+                <div class="flex items-center justify-between mb-2">
+                  <h4 class="font-cinzel text-base font-bold text-white">Lâmpada dos Sonhadores</h4>
+                  <span class="text-xs font-mono-code text-[#f1d27a] font-bold">2.300 Golds</span>
+                </div>
+                <p class="text-xs text-[#cfc7b4] leading-relaxed mb-3">
+                  Chama azulada invisível aos mortais que arde sobre o semideus emanando esperança e cura contínua para o esquadrão em momentos de trevas.
+                </p>
+                <div class="bg-black/50 p-2.5 rounded text-[11px] font-mono-code text-[#8c8270] space-y-1">
+                  <div>✦ <strong>Passivo:</strong> +50 ATK e +20 DEF</div>
+                  <div>✦ <strong>Ativo (50 Mana):</strong> Aliados recebem +20% ATK, +20% DEF e regeneram 5% HP MAX por turno. Inimigos sofrem -2 em vontade.</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Sonhar Infinito -->
+            <div class="glass-card p-5 rounded-xl border border-white/10 hover:border-indigo-500/50 transition-all flex flex-col justify-between">
+              <div>
+                <div class="flex items-center justify-between mb-2">
+                  <h4 class="font-cinzel text-base font-bold text-white">Sonhar Infinito</h4>
+                  <span class="text-xs font-mono-code text-[#f1d27a] font-bold">2.600 Golds</span>
+                </div>
+                <p class="text-xs text-[#cfc7b4] leading-relaxed mb-3">
+                  Chove areia estelar no campo de batalha. Permite a fusão de limites de invocação com aliados da classe Delírio, compartilhando fardos energéticos.
+                </p>
+                <div class="bg-black/50 p-2.5 rounded text-[11px] font-mono-code text-[#8c8270] space-y-1">
+                  <div>✦ <strong>Passivo:</strong> +30% Dano Crítico para a equipe</div>
+                  <div>✦ <strong>Ativo (100 Mana):</strong> Permite ao aliado de Delírio invocar criaturas pelo limite do portador da bênção.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ── 3. LISTA OFICIAL DE MATERIAIS & METAIS CTÔNICOS (DO DOC 2) ── -->
+    <section id="materiais" class="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-[#d4af37]/20">
+      
+      <div class="text-center max-w-3xl mx-auto mb-16">
+        <span class="text-[10px] font-mono-code px-3 py-1 rounded bg-[#d4af37]/10 border border-[#d4af37]/30 text-[#f1d27a] uppercase tracking-widest">
+          Catálogo Oficial • Doc 2 Canônico
+        </span>
+        <h2 class="font-cinzel text-3xl sm:text-4xl font-bold text-white mt-3 mb-2">MATERIAIS, METAIS NOBRES & SUBMUNDO</h2>
+        <p class="text-xs sm:text-sm text-[#cfc7b4] leading-relaxed">
+          Os componentes fundamentais para Forjadores, Encantadores e Artífices de Ébano. Preços oficiais em Golds e bônus aplicados.
+        </p>
+      </div>
+
+      <!-- 3.1 Metais Nobres -->
+      <div class="mb-12 space-y-4">
+        <h3 class="font-cinzel text-lg font-bold text-[#f1d27a] flex items-center gap-2">
+          <span>✨</span> METAIS NOBRES & CONDUTORES SAGRADOS
+        </h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+          <!-- Prata Estelar -->
+          <div class="glass-panel p-5 rounded-xl border border-white/10 space-y-2 flex flex-col justify-between">
+            <div>
+              <div class="flex justify-between items-center mb-1">
+                <span class="font-cinzel font-bold text-white text-sm">1 kg de Prata Estelar</span>
+                <span class="text-xs font-mono-code text-[#f1d27a] font-bold">90 Golds</span>
+              </div>
+              <p class="text-xs text-[#cfc7b4] leading-relaxed">
+                Metal mágico com brilho das estrelas, capaz de ferir monstros, semideuses e mortais. O brilho pode ser maximizado pelo forjador.
+              </p>
+            </div>
+            <div class="text-[11px] font-mono-code text-emerald-400 pt-2 border-t border-white/10">
+              Bônus: +10 ATK ou +10 DEF (Acumulativo)
+            </div>
+          </div>
+
+          <!-- Prata Lunar -->
+          <div class="glass-panel p-5 rounded-xl border border-white/10 space-y-2 flex flex-col justify-between">
+            <div>
+              <div class="flex justify-between items-center mb-1">
+                <span class="font-cinzel font-bold text-white text-sm">1 kg de Prata Lunar</span>
+                <span class="text-xs font-mono-code text-[#f1d27a] font-bold">90 Golds</span>
+              </div>
+              <p class="text-xs text-[#cfc7b4] leading-relaxed">
+                Brilho azul claro. Fere monstros, semideuses e imortais. Metal predileto das caçadoras de Ártemis pela leveza extrema em disparos ágeis.
+              </p>
+            </div>
+            <div class="text-[11px] font-mono-code text-emerald-400 pt-2 border-t border-white/10">
+              Bônus: +10 ATK ou +10 DEF em Agilidade (Acumulativo)
+            </div>
+          </div>
+
+          <!-- Argila Mágica -->
+          <div class="glass-panel p-5 rounded-xl border border-white/10 space-y-2 flex flex-col justify-between">
+            <div>
+              <div class="flex justify-between items-center mb-1">
+                <span class="font-cinzel font-bold text-white text-sm">1 kg de Argila Mágica</span>
+                <span class="text-xs font-mono-code text-[#f1d27a] font-bold">100 Golds</span>
+              </div>
+              <p class="text-xs text-[#cfc7b4] leading-relaxed">
+                Extraída do leito do Nilo e de rios místicos. Utilizada por escultores e magos para dar forma maleável a shabtis autônomos.
+              </p>
+            </div>
+            <div class="text-[11px] font-mono-code text-emerald-400 pt-2 border-t border-white/10">
+              Bônus: +30 HP
+            </div>
+          </div>
+
+          <!-- Minério Meteórico -->
+          <div class="glass-panel p-5 rounded-xl border border-white/10 space-y-2 flex flex-col justify-between">
+            <div>
+              <div class="flex justify-between items-center mb-1">
+                <span class="font-cinzel font-bold text-white text-sm">1 kg de Minério Meteórico</span>
+                <span class="text-xs font-mono-code text-[#f1d27a] font-bold">80 Golds</span>
+              </div>
+              <p class="text-xs text-[#cfc7b4] leading-relaxed">
+                Fragmentos celestes colhidos pela Casa da Vida, desprendidos da dimensão do Duat. Fere monstros e demônios sem alterar a pureza da magia.
+              </p>
+            </div>
+            <div class="text-[11px] font-mono-code text-emerald-400 pt-2 border-t border-white/10">
+              Bônus: +10 ATK, +10 DEF ou +30 HP (Acumulativo)
+            </div>
+          </div>
+
+          <!-- Sabugueiro Divino -->
+          <div class="glass-panel p-5 rounded-xl border border-white/10 space-y-2 flex flex-col justify-between">
+            <div>
+              <div class="flex justify-between items-center mb-1">
+                <span class="font-cinzel font-bold text-white text-sm">1 kg de Sabugueiro Divino</span>
+                <span class="text-xs font-mono-code text-[#f1d27a] font-bold">250 Golds</span>
+              </div>
+              <p class="text-xs text-[#cfc7b4] leading-relaxed">
+                Madeira da floresta eslava ligada aos deuses da natureza. Amplifica a condução arcana de cajados, varinhas e cetros de batalha.
+              </p>
+            </div>
+            <div class="text-[11px] font-mono-code text-purple-400 pt-2 border-t border-white/10">
+              Bônus: -10 Custo de Mana em Poderes Ativos (Não Acumulativo)
+            </div>
+          </div>
+
+          <!-- Núcleo Mágico C1 -->
+          <div class="glass-panel p-5 rounded-xl border border-white/10 space-y-2 flex flex-col justify-between">
+            <div>
+              <div class="flex justify-between items-center mb-1">
+                <span class="font-cinzel font-bold text-white text-sm">1x Núcleo Mágico C1</span>
+                <span class="text-xs font-mono-code text-[#f1d27a] font-bold">200 Golds</span>
+              </div>
+              <p class="text-xs text-[#cfc7b4] leading-relaxed">
+                Anomalia mágica extraída de seres fantásticos de classe comum. Conserva ressonância para condutores e instrumentos ritualísticos.
+              </p>
+            </div>
+            <div class="text-[11px] font-mono-code text-purple-400 pt-2 border-t border-white/10">
+              Bônus: +1 Dado em Execuções de Magias (Não Acumulativo)
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- 3.2 Os Ferros dos 5 Rios do Submundo & Metais Ctônicos -->
+      <div class="space-y-4">
+        <h3 class="font-cinzel text-lg font-bold text-red-400 flex items-center gap-2">
+          <span>🌊</span> OS FERROS DOS CINCO RIOS DO SUBMUNDO & METAIS CTÔNICOS
+        </h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+          <!-- Ferro Estígio (Estige) -->
+          <div class="glass-panel p-5 rounded-xl border border-purple-500/30 space-y-2 flex flex-col justify-between">
+            <div>
+              <div class="flex justify-between items-center mb-1">
+                <span class="font-cinzel font-bold text-purple-300 text-sm">1 kg de Ferro Estígio</span>
+                <span class="text-xs font-mono-code text-[#f1d27a] font-bold">400 Golds</span>
+              </div>
+              <p class="text-xs text-[#cfc7b4] leading-relaxed">
+                Forjado no leito profano do rio do oblívio. Metal negro com aura azulada que jamais perde o fio. Corta corpo e alma simultaneamente.
+              </p>
+            </div>
+            <div class="text-[11px] font-mono-code text-purple-300 pt-2 border-t border-white/10">
+              Bônus: Rouba 10 de Mana de inimigos feridos (Não Acumulativo)
+            </div>
+          </div>
+
+          <!-- Ferro Aqueronte (Aqueronte) -->
+          <div class="glass-panel p-5 rounded-xl border border-red-500/30 space-y-2 flex flex-col justify-between">
+            <div>
+              <div class="flex justify-between items-center mb-1">
+                <span class="font-cinzel font-bold text-red-300 text-sm">1 kg de Ferro Aqueronte</span>
+                <span class="text-xs font-mono-code text-[#f1d27a] font-bold">250 Golds</span>
+              </div>
+              <p class="text-xs text-[#cfc7b4] leading-relaxed">
+                Forjado no leito do rio da dor. Metal cinzento com aura avermelhada. Desperta a verdade e reduz gradativamente o controle do oponente.
+              </p>
+            </div>
+            <div class="text-[11px] font-mono-code text-red-300 pt-2 border-t border-white/10">
+              Bônus: -10 DEF no alvo até o fim do combate (Não Acumulativo)
+            </div>
+          </div>
+
+          <!-- Ferro Lete (Lete) -->
+          <div class="glass-panel p-5 rounded-xl border border-white/20 space-y-2 flex flex-col justify-between">
+            <div>
+              <div class="flex justify-between items-center mb-1">
+                <span class="font-cinzel font-bold text-gray-200 text-sm">1 kg de Ferro Lete</span>
+                <span class="text-xs font-mono-code text-[#f1d27a] font-bold">250 Golds</span>
+              </div>
+              <p class="text-xs text-[#cfc7b4] leading-relaxed">
+                Forjado no rio do esquecimento. Metal quase branco com aura cinzenta. Entorpece sentidos e apaga memórias imediatas de adversários feridos.
+              </p>
+            </div>
+            <div class="text-[11px] font-mono-code text-gray-300 pt-2 border-t border-white/10">
+              Bônus: -10 DEF • Dano profundo causa perda de sentido por 2T (+1 dif)
+            </div>
+          </div>
+
+          <!-- Ferro Flegetonte (Flegetonte) -->
+          <div class="glass-panel p-5 rounded-xl border border-amber-500/30 space-y-2 flex flex-col justify-between">
+            <div>
+              <div class="flex justify-between items-center mb-1">
+                <span class="font-cinzel font-bold text-amber-300 text-sm">1 kg de Ferro Flegetonte</span>
+                <span class="text-xs font-mono-code text-[#f1d27a] font-bold">300 Golds</span>
+              </div>
+              <p class="text-xs text-[#cfc7b4] leading-relaxed">
+                Forjado no rio do fogo e sofrimento eterno. Permanece incandescente e jamais resfria. Regenera o usuário enquanto queima a carne da presa.
+              </p>
+            </div>
+            <div class="text-[11px] font-mono-code text-amber-300 pt-2 border-t border-white/10">
+              Bônus: Concede +5 HP sempre que causar dano (Não Acumulativo)
+            </div>
+          </div>
+
+          <!-- Ferro Cócito (Cócito) -->
+          <div class="glass-panel p-5 rounded-xl border border-cyan-500/30 space-y-2 flex flex-col justify-between">
+            <div>
+              <div class="flex justify-between items-center mb-1">
+                <span class="font-cinzel font-bold text-cyan-300 text-sm">1 kg de Ferro Cócito</span>
+                <span class="text-xs font-mono-code text-[#f1d27a] font-bold">250 Golds</span>
+              </div>
+              <p class="text-xs text-[#cfc7b4] leading-relaxed">
+                Forjado no rio da lamentação. Azul claro gélido com aura vermelha. Compromete a moral, induzindo tristeza profunda e lembranças de luto.
+              </p>
+            </div>
+            <div class="text-[11px] font-mono-code text-cyan-300 pt-2 border-t border-white/10">
+              Bônus: -10 DEF • Dano profundo causa melancolia por 2T (+1 dif)
+            </div>
+          </div>
+
+          <!-- Matéria do Vazio -->
+          <div class="glass-panel p-5 rounded-xl border border-purple-900/50 space-y-2 flex flex-col justify-between">
+            <div>
+              <div class="flex justify-between items-center mb-1">
+                <span class="font-cinzel font-bold text-purple-400 text-sm">1 kg de Matéria do Vazio</span>
+                <span class="text-xs font-mono-code text-[#f1d27a] font-bold">750 Golds</span>
+              </div>
+              <p class="text-xs text-[#cfc7b4] leading-relaxed">
+                Extraída das fendas de Apófis. Metal negro com radiação púrpura que deteriora matéria comum. Exige ligação com o sangue do portador.
+              </p>
+            </div>
+            <div class="text-[11px] font-mono-code text-purple-400 pt-2 border-t border-white/10">
+              Bônus: +10% Taxa Crítica (Acumulativo)
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ── 4. REGRAS DE BAÚ COLETIVO & PHOTOPLAYER ── -->
+    <section id="diretrizes" class="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-[#d4af37]/20">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        
+        <div class="glass-card p-6 sm:p-8 rounded-2xl border border-white/10 space-y-4">
+          <h3 class="font-cinzel text-xl font-bold text-white flex items-center gap-2">
+            <span class="text-[#f1d27a]">📦</span> BAÚ COLETIVO & ATUALIZAÇÕES
+          </h3>
+          <p class="text-xs text-[#cfc7b4] leading-relaxed">
+            Os estudantes e semideuses não precisam redigir postagens de compra. Basta indicar no canal de atualizações do Discord qual item está sendo adquirido, anexando a quantidade de Golds a ser deduzida pelo sistema contábil de Avalon.
+          </p>
+          <div class="text-[11px] font-mono-code bg-black/40 p-3 rounded text-[#8c8270]">
+            ✦ Repasse de itens entre jogadores é livre mediante notificação ao Conselho de Mármore.
+          </div>
+        </div>
+
+        <div class="glass-card p-6 sm:p-8 rounded-2xl border border-white/10 space-y-4">
+          <h3 class="font-cinzel text-xl font-bold text-white flex items-center gap-2">
+            <span class="text-[#f1d27a]">🎭</span> DIRETRIZES DE PHOTOPLAYER (DARK FANTASY)
+          </h3>
+          <p class="text-xs text-[#cfc7b4] leading-relaxed">
+            Todas as artes de personagens aprovadas devem obedecer ao padrão de pintura ultra-realista Dark Fantasy da Égide de Avalon. Imagens cartunescas ou excessivamente estilizadas não são homologadas para fichas oficiais da temporada 2026.
+          </p>
+          <div class="text-[11px] font-mono-code bg-black/40 p-3 rounded text-[#8c8270]">
+            ✦ Prompts calibrados para o Midjourney v6.1/v7 estão disponíveis para consulta dos jogadores.
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ==========================================================================
+       RODAPÉ EDITORIAL COMPLETO (DARK LUXURY) - PADRÃO OFICIAL NEOTHEON
+       ========================================================================== -->
+  <footer class="neotheon-global-footer">
+    <div class="footer-container">
+      
+      <!-- Top Grid: Brand & Lore + 3 Navigation Columns -->
+      <div class="footer-grid">
+        
+        <!-- Column 1: Brand, Crest & Lore -->
+        <div class="footer-brand-col">
+          <div class="footer-brand-badge">
+            <div class="brand-crest">N</div>
+            <div class="footer-brand-info">
+              <span class="footer-brand-title">NEOTHEON</span>
+              <span class="footer-brand-sub">Égide de Avalon · v2.5</span>
+            </div>
+          </div>
+          <p class="footer-lore-quote">
+            "Onde juramentos são mais fortes que sangue, e o silêncio sustenta o equilíbrio entre deuses e homens."
+          </p>
+          <div class="footer-status-pill">
+            <span class="status-pulse-dot"></span>
+            <span class="status-text">STATUS: VÉU ESTÁVEL // LONDRES, UK</span>
+          </div>
+        </div>
+
+        <!-- Column 2: O Universo & Crônicas -->
+        <div class="footer-nav-col">
+          <h4 class="footer-nav-heading">✦ O UNIVERSO</h4>
+          <ul class="footer-links-list">
+            <li><a href="index.html" class="footer-nav-link">Início (Temporada 2)</a></li>
+            <li><a href="universo.html" class="footer-nav-link">Universo & Cosmologia</a></li>
+            <li><a href="universo.html#londres" class="footer-nav-link">Londres sob o Véu</a></li>
+            <li><a href="universo.html#egide" class="footer-nav-link">A Égide de Avalon</a></li>
+            <li><a href="universo.html#season1" class="footer-nav-link">Crônicas da Season 1</a></li>
+          </ul>
+        </div>
+
+        <!-- Column 3: Diretrizes & Sistema -->
+        <div class="footer-nav-col">
+          <h4 class="footer-nav-heading">✦ SISTEMA & JOGO</h4>
+          <ul class="footer-links-list">
+            <li><a href="sistema.html" class="footer-nav-link">Regras & Guia de Criação</a></li>
+            <li><a href="poderes.html" class="footer-nav-link">Poderes & Individualidades</a></li>
+            <li><a href="operacoes.html" class="footer-nav-link">Painel de Operações</a></li>
+            <li><a href="agente.html" class="footer-nav-link">Área do Agente & Fichas</a></li>
+            <li><a href="endgame.html" class="footer-nav-link text-red-400 hover:text-red-300">Zonas de Risco (Endgame)</a></li>
+          </ul>
+        </div>
+
+        <!-- Column 4: QG & Comunidade -->
+        <div class="footer-nav-col">
+          <h4 class="footer-nav-heading">✦ COMUNIDADE</h4>
+          <ul class="footer-links-list">
+            <li>
+              <a href="https://discord.gg/4vMxwCKwpg" target="_blank" rel="noopener noreferrer" class="footer-nav-link flex items-center gap-1.5 text-[#f1d27a] hover:text-white">
+                <span>Servidor Discord Oficial</span>
+                <span class="text-xs">↗</span>
+              </a>
+            </li>
+            <li>
+              <a href="https://yoble.us/Community/305085" target="_blank" rel="noopener noreferrer" class="footer-nav-link flex items-center gap-1.5 hover:text-white">
+                <span>Comunidade Yoble (305085)</span>
+                <span class="text-xs">↗</span>
+              </a>
+            </li>
+            <li>
+              <a href="https://discord.gg/4vMxwCKwpg" target="_blank" rel="noopener noreferrer" class="footer-nav-link flex items-center gap-1.5 hover:text-white">
+                <span>Mesas de Sexta no Roll20</span>
+                <span class="text-xs">↗</span>
+              </a>
+            </li>
+            <li>
+              <a href="https://discord.gg/4vMxwCKwpg" target="_blank" rel="noopener noreferrer" class="footer-nav-link flex items-center gap-1.5 hover:text-white">
+                <span>Inscrições de Missões</span>
+                <span class="text-xs">↗</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+      </div>
+
+      <!-- Bottom Bar: Legal, Rights & Disclaimer -->
+      <div class="footer-bottom-bar">
+        <div class="footer-copyright">
+          © 2026 NEOTHEON RPG — Todos os direitos reservados sob a Égide de Avalon.
+        </div>
+        <div class="footer-disclaimer">
+          Neotheon é um projeto de RPG colaborativo sem fins lucrativos, criado exclusivamente para entretenimento e ficção.
+        </div>
+      </div>
+
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>

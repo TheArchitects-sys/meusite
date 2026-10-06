@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>ENDGAME — Abismo Espiral & Berçário Abissal | NEOTHEON RPG</title>
+  
+  <!-- Meta & OpenGraph -->
+  <meta name="description" content="Zonas de Risco Extremo do RPG NEOTHEON: Abismo Espiral Patch 1.0 'Tempestade Eterna', Berçário Abissal 1.0, Universo Simulado e Fendas do Caos.">
+  <meta property="og:title" content="ENDGAME & ZONAS PROIBIDAS — NEOTHEON">
+  <meta property="og:description" content="Desafie o Abismo Espiral com Catriona Cordella e o Berçário Abissal contra a Medusa e a Porca Carmoniana.">
+  <meta property="og:image" content="assets/valiria_mission.jpg">
+  <meta name="theme-color" content="#050608">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            'gold-primary': '#d4af37',
+            'gold-light': '#f1d27a',
+            'gold-dim': '#8c6a2b',
+            'dark-bg': '#050608',
+            'dark-surface': '#0a0912',
+            'dark-veil': '#0f0e1a',
+            'crimson-pure': '#c82924',
+            'abyss-purple': '#6b21a8',
+            'abyss-dark': '#1e082b',
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- GSAP Animation Library CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+
+  <!-- Custom Stylesheet -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-[#050608] text-[#e2ded6] min-h-screen relative antialiased">
+
+  <!-- Dynamic WebGL Volumetric Mist Canvas -->
+  <canvas id="fog-canvas"></canvas>
+
+    <!-- ── GLOBAL HEADER ── -->
+  <header class="santioni-header">
+    <a href="index.html" class="brand-badge">
+      <div class="brand-crest">N</div>
+      <div class="brand-text">
+        <span class="brand-name">NEOTHEON</span>
+        <span class="brand-sub">Égide de Avalon</span>
+      </div>
+    </a>
+
+    <div class="flex items-center gap-3 sm:gap-4">
+      <nav class="santioni-nav-pill" aria-label="Navegação Principal">
+        <a href="index.html" >INÍCIO</a>
+        <span class="pill-ornament">❖</span>
+        <a href="universo.html" >UNIVERSO</a>
+        <span class="pill-ornament">❖</span>
+        <a href="poderes.html" >PODERES</a>
+        <span class="pill-ornament">❖</span>
+        <a href="operacoes.html" >OPERAÇÕES</a>
+        <span class="pill-ornament">❖</span>
+        <a href="banners.html" class="hover:text-[#f1d27a]">BANNERS</a>
+        <span class="pill-ornament">❖</span>
+        <a href="sistema.html" >SISTEMA</a>
+        <span class="pill-ornament">❖</span>
+        <a href="agente.html" >AGENTE</a>
+        <span class="pill-ornament">❖</span>
+        <a href="endgame.html" class="active text-red-400 hover:text-red-300">ENDGAME</a>
+      </nav>
+
+      <a href="https://discord.gg/4vMxwCKwpg" target="_blank" rel="noopener noreferrer" class="hidden sm:inline-flex btn-gold px-4 py-2 rounded text-[10px] tracking-widest font-bold">
+        DISCORD ↗
+      </a>
+
+      <button id="mobile-menu-btn" class="lg:hidden text-[#cfc7b4] hover:text-white p-1 text-2xl font-mono-code focus:outline-none" aria-label="Abrir menu mobile">
+        ☰
+      </button>
+    </div>
+  </header>
+
+  <!-- Audio Equalizer Floating Button (Bottom Right) -->
+  <button id="audio-toggle-btn" class="audio-toggle-btn border-red-500/40" title="Toggle Áudio Atmosférico da Égide">
+    <div class="audio-bars">
+      <div class="audio-bar bg-red-500"></div>
+      <div class="audio-bar bg-red-500"></div>
+      <div class="audio-bar bg-red-500"></div>
+    </div>
+  </button>
+
+    <!-- Mobile Drawer Menu -->
+  <div id="mobile-menu" class="hidden lg:hidden fixed top-20 left-0 w-full z-50 bg-[#050608]/98 border-b border-[#d4af37]/20 px-6 py-6 space-y-3 text-xs font-cinzel uppercase tracking-widest backdrop-blur-xl">
+    <a href="index.html" class="block py-2 text-[#cfc7b4] hover:text-white">Início</a>
+    <a href="universo.html" class="block py-2 text-[#cfc7b4] hover:text-white">Universo & Cosmologia</a>
+    <a href="poderes.html" class="block py-2 text-[#cfc7b4] hover:text-white">Poderes & Individualidades</a>
+    <a href="operacoes.html" class="block py-2 text-[#cfc7b4] hover:text-white">❖ Operações (Missões)</a>
+    <a href="banners.html" class="block py-2 text-[#cfc7b4] hover:text-white">✦ Banners Míticos</a>
+    <a href="operacoes.html?view=novato" class="block py-2 text-[#cfc7b4] hover:text-[#f1d27a]">◈ Novato Premium</a>
+    <a href="sistema.html" class="block py-2 text-[#cfc7b4] hover:text-white">Sistema & Guias</a>
+    <a href="agente.html" class="block py-2 text-[#cfc7b4] hover:text-white">Área do Agente & Fichas</a>
+    <a href="endgame.html" class="block py-2 text-red-400 hover:text-red-300 font-bold">Endgame (Zonas de Risco)</a>
+    <div class="pt-4 border-t border-white/10 flex flex-col gap-3">
+      <a href="https://discord.gg/4vMxwCKwpg" target="_blank" rel="noopener noreferrer" class="btn-gold text-center py-3 rounded">ENTRAR NO DISCORD</a>
+      <a href="https://yoble.us/Community/305085" target="_blank" rel="noopener noreferrer" class="btn-secondary-gold text-center py-2.5 rounded">COMUNIDADE YOBLE</a>
+    </div>
+  </div>
+
+  <main class="relative z-10 pt-28">
+
+    <!-- ==========================================================================
+         HERO SECTION: ZONAS PROIBIDAS & ENDGAME
+         ========================================================================== -->
+    <section class="py-16 px-4 sm:px-6 lg:px-8 text-center relative max-w-5xl mx-auto">
+      <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-red-950/60 border border-red-500/40 text-red-300 text-[11px] font-mono-code uppercase tracking-widest mb-6">
+        <span class="text-red-500">⚠</span>
+        <span>ACESSO RESTRITO • PROTOCOLOS DE RISCO ÔMEGA</span>
+        <span class="text-red-500">⚠</span>
+      </div>
+
+      <h1 class="font-cinzel-dec text-4xl sm:text-5xl md:text-6xl font-black text-white tracking-wide uppercase leading-tight mb-4">
+        ZONAS DE ENDGAME
+      </h1>
+
+      <p class="font-garamond italic text-xl text-[#cfc7b4] max-w-3xl mx-auto leading-relaxed mb-10">
+        "Onde a luz do Olimpo se dissipa, o Tártaro abre sua matriz geradora e a Égide de Avalon envia apenas esquadrões dispostos a testar os limites da mortalidade."
+      </p>
+
+      <!-- Quick Navigation Tabs -->
+      <div class="flex flex-wrap items-center justify-center gap-3 text-xs font-cinzel uppercase tracking-widest">
+        <a href="#abismo-espiral" class="px-5 py-2.5 rounded-full bg-red-950/40 border border-red-500/40 text-red-300 hover:bg-red-900/60 transition-all">
+          1. Abismo Espiral (Patch 1.0)
+        </a>
+        <a href="#bercario-abissal" class="px-5 py-2.5 rounded-full bg-purple-950/40 border border-purple-500/40 text-purple-300 hover:bg-purple-900/60 transition-all">
+          2. Berçário Abissal (Útero do Tártaro)
+        </a>
+        <a href="#universo-simulado" class="px-5 py-2.5 rounded-full bg-cyan-950/40 border border-cyan-500/40 text-cyan-300 hover:bg-cyan-900/60 transition-all">
+          3. Universo Simulado & Incubadora
+        </a>
+        <a href="#reino-caos" class="px-5 py-2.5 rounded-full bg-amber-950/40 border border-amber-500/40 text-amber-300 hover:bg-amber-900/60 transition-all">
+          4. Fendas do Caos em Londres
+        </a>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         1. ABISMO ESPIRAL PATCH 1.0 — TEMPESTADE ETERNA
+         ========================================================================== -->
+    <section id="abismo-espiral" class="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+      
+      <div class="text-center max-w-3xl mx-auto mb-12">
+        <span class="text-[10px] font-cinzel text-red-400 uppercase tracking-widest font-bold">✦ EVENTO FIXO DE LONGA DURAÇÃO ✦</span>
+        <h2 class="font-cinzel-dec text-3xl sm:text-4xl font-bold text-white mt-1 mb-3">ABISMO ESPIRAL 1.0: TEMPESTADE ETERNA</h2>
+        <p class="font-garamond italic text-base text-[#cfc7b4]">
+          Londres como marco zero de um buraco negro dimensional onde realidades e épocas colapsaram. Incursões periódicas impedem o avanço da anomalia sobre a cidade mortal.
+        </p>
+      </div>
+
+      <!-- Regras Fundamentais de Formação de Equipe -->
+      <div class="glass-panel p-6 sm:p-8 rounded-2xl border border-red-500/40 mb-10 bg-gradient-to-r from-red-950/40 via-[#0a0912] to-purple-950/30">
+        <h3 class="font-cinzel text-sm font-bold text-[#f1d27a] uppercase tracking-wider mb-4">
+          ✦ REGRAS PARA FORMAÇÃO DE EQUIPE (DUAS EQUIPES DE ATÉ 3 INTEGRANTES)
+        </h3>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-xs font-mono-code text-gray-300">
+          <div class="p-4 rounded bg-black/40 border border-white/10 space-y-2">
+            <div class="text-red-400 font-bold text-sm">⚔️ CARRY (DPS PURO)</div>
+            <p class="text-gray-300 font-garamond italic text-xs leading-relaxed">
+              Personagem responsável exclusivamente por infligir dano. Restrito a conceder buffs a si próprio para maximizar o multiplicador ofensivo, sem poderes de suporte para a equipe.
+            </p>
+          </div>
+          <div class="p-4 rounded bg-black/40 border border-white/10 space-y-2">
+            <div class="text-amber-400 font-bold text-sm">🛡️ TANK (BLINDAGEM)</div>
+            <p class="text-gray-300 font-garamond italic text-xs leading-relaxed">
+              Responsável por conter e interceptar os ataques inimigos, mitigar danos físicos/místicos e sustentar barreiras protetoras e buffs de defesa para os aliados.
+            </p>
+          </div>
+          <div class="p-4 rounded bg-black/40 border border-white/10 space-y-2">
+            <div class="text-cyan-400 font-bold text-sm">✨ SUPORTE (CURA & UTILIDADE)</div>
+            <p class="text-gray-300 font-garamond italic text-xs leading-relaxed">
+              Responsável pela sustentação vital da equipe: cura biológica, restauração de mana, aplicação de debuffs cruciais sobre os chefes e controle de campo.
+            </p>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6 pt-4 border-t border-white/10 text-xs font-mono-code">
+          <div><span class="text-emerald-400 font-bold">Bênção de Amari:</span> Cavaleiros de dragão (Empyrean) têm vantagem em combate e suas magias menores não sofrem debuffs dos andares.</div>
+          <div><span class="text-red-400 font-bold">Maldição de Poromiel:</span> Todo poder ativo, artefato ou regalia tem o consumo de mana estritamente dobrado.</div>
+          <div><span class="text-purple-400 font-bold">Caça do Abismo:</span> Filhos de Perpétuos atraem a fome da anomalia, fazendo as ondas de monstros surgirem de uma vez só!</div>
+        </div>
+      </div>
+
+      <!-- 1º ANDAR: POSTO AVANÇADO DE RESSON -->
+      <div class="glass-panel p-8 rounded-2xl border border-white/10 mb-8 space-y-6">
+        <div class="flex flex-wrap items-center justify-between gap-4 border-b border-white/10 pb-4">
+          <div>
+            <span class="text-[10px] font-mono-code uppercase px-3 py-1 rounded bg-red-950/70 border border-red-500/30 text-red-300 inline-block mb-1">
+              ANDAR 01 • RESSON (FRONTEIRA NAVARRE / POROMIEL)
+            </span>
+            <h3 class="font-cinzel-dec text-2xl font-bold text-white uppercase">1º ANDAR: POSTO AVANÇADO DE RESSON</h3>
+          </div>
+          <div class="text-xs font-mono-code text-gray-400">
+            Equipe 01 cuida da Exploração • Equipe 02 cuida dos Combates
+          </div>
+        </div>
+
+        <!-- Duas Formas de Conquista -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          
+          <!-- Modo Exploração (Rotas 1 a 18) -->
+          <div class="space-y-3">
+            <h4 class="font-cinzel text-base font-bold text-[#f1d27a] uppercase">MODO EXPLORAÇÃO (MAPA COM 18 ROTAS)</h4>
+            <p class="text-xs font-garamond italic text-gray-300 leading-relaxed">
+              Masmorra interativa com testes de habilidade e bifurcações táticas nas ruínas da torre de combate de Resson:
+            </p>
+            <ul class="text-xs font-mono-code space-y-2 text-gray-300 max-h-72 overflow-y-auto pr-2 custom-scroll">
+              <li><span class="text-[#f1d27a]">› 1.</span> <strong>Teste de Percepção (Dif. 10):</strong> Sucesso permite escolher rota 2; falha obriga rota 2a (emboscada com Cavaleiro de Grifo Menor em 4a).</li>
+              <li><span class="text-[#f1d27a]">› 5.</span> <strong>Teste de Percepção (Dif. 19):</strong> Permite escolher o destino exato no portal de teleporte da rota 6.</li>
+              <li><span class="text-[#f1d27a]">› 8.</span> <strong>Teste de Percepção (Dif. 9):</strong> Reconhece a passagem subterrânea segura em 10; falha força acreditar em tesouro fácil.</li>
+              <li><span class="text-[#f1d27a]">› 10.</span> <strong>Passagem Subterrânea:</strong> Civis assustados avisam sobre Cordella e o massacre de crianças de Navarre.</li>
+              <li><span class="text-[#f1d27a]">› 10c/10b/12a.</span> <strong>Baú Dourado:</strong> Concede uma medalha navarriana que garante capacidade de voo ao grupo sem custo de mana.</li>
+              <li><span class="text-[#f1d27a]">› 11.</span> <strong>Teste de Sabedoria (Dif. 13):</strong> Mecanismo de alavanca da passagem secreta; exige supervelocidade ou buscar chave reserva em Catriona Cordella (11A).</li>
+              <li><span class="text-[#f1d27a]">› 11A.</span> <strong>Infortúnio (Chefe do Abismo):</strong> Porta emperrada revela <strong>Catriona Cordella</strong> convocando até 10x Cavaleiros de Grifo!</li>
+              <li><span class="text-[#f1d27a]">› 13A.</span> <strong>Sala Secreta:</strong> Maço de chaves para abrir a saída (rota 18). Teste de Vontade para resistir à ganância de ouro pesado.</li>
+              <li><span class="text-emerald-400">› 18.</span> <strong>Saída Triunfal:</strong> Conquista do 1º Andar e liberação dos espólios.</li>
+            </ul>
+          </div>
+
+          <!-- Modo Caça (Sem Exploração) -->
+          <div class="space-y-3">
+            <h4 class="font-cinzel text-base font-bold text-red-400 uppercase">MODO CAÇA (COMBATE DIRETO EM 2 SALAS)</h4>
+            <p class="text-xs font-garamond italic text-gray-300 leading-relaxed">
+              Para esquadrões focados exclusivamente em extermínio. Cada equipe assume uma sala com 3 ondas sucessivas:
+            </p>
+            <div class="space-y-3 text-xs font-mono-code text-gray-300">
+              <div class="p-3 rounded bg-black/40 border border-white/10">
+                <div class="text-[#f1d27a] font-bold mb-1">SALA 01 (Pátio da Torre de Resson • Equipe 01):</div>
+                <div>• Onda 1: 3x Aves de Estinfália (1 ataque cada)</div>
+                <div>• Onda 2: 3x Harpias (3 ataques cada)</div>
+                <div>• Onda 3: 2x Empousai (3 ataques cada)</div>
+                <div class="text-gray-400 italic text-[11px] mt-1">* Possuem manto poromielês com escudo de ouro líquido de 200 HP (vulnerável apenas a água).</div>
+              </div>
+
+              <div class="p-3 rounded bg-black/40 border border-white/10">
+                <div class="text-cyan-400 font-bold mb-1">SALA 02 (Céus de Tecarus em Poromiel • Equipe 02):</div>
+                <div>• Onda 1: 3x Aves de Estinfália (1 ataque cada)</div>
+                <div>• Onda 2: 3x Harpias (3 ataques cada)</div>
+                <div>• Onda 3: 2x Grifos sem Cavaleiros (5 ataques cada)</div>
+                <div class="text-gray-400 italic text-[11px] mt-1">* Combate aéreo obrigatório (sem voo = morte por queda). Escudo de 400 HP de ouro líquido (vulnerável a gelo ou eletricidade).</div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- 2º ANDAR: A FÚRIA DE POROMIEL (CATRIONA CORDELLA & CAMPE) -->
+      <div class="glass-panel p-8 rounded-2xl border border-red-500/50 mb-8 space-y-6 bg-red-950/10">
+        <div class="flex flex-wrap items-center justify-between gap-4 border-b border-red-500/20 pb-4">
+          <div>
+            <span class="text-[10px] font-mono-code uppercase px-3 py-1 rounded bg-red-950/80 border border-red-500/40 text-red-300 inline-block mb-1">
+              ANDAR 02 • CLÍMAX DA TEMPESTADE ETERNA
+            </span>
+            <h3 class="font-cinzel-dec text-2xl font-bold text-white uppercase">2º ANDAR: A FÚRIA DE POROMIEL</h3>
+          </div>
+          <div class="text-xs font-mono-code text-red-400">
+            Efeito Morte: Imunidades canceladas • Consumo de mana dobrado • Buffs reduzidos à metade
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          
+          <!-- Sala 01: A Invocadora & Campe -->
+          <div class="p-6 rounded-xl bg-black/40 border border-white/10 space-y-3">
+            <span class="text-xs font-mono-code text-purple-400 font-bold uppercase block">SALA 01 • TÁRTARO REABERTO</span>
+            <h4 class="font-cinzel text-lg font-bold text-white">A Invocadora & Campe</h4>
+            <p class="text-xs font-garamond italic text-gray-300 leading-relaxed">
+              Uma cavaleira de Poromiel portando colar londrino de rosas negras invoca monstros ctônicos. Imune a golpes físicos (atingível apenas por ataques mentais), perde 150 HP a cada monstro destruído (Stats: 900 HP, 180 DEF, 800 Mana).
+            </p>
+            <div class="p-3 rounded bg-red-950/40 border border-red-500/30 text-xs text-red-200">
+              <strong>Apocalipse Final:</strong> Ao morrer, seu sacrifício rasga o solo e liberta <strong>Campe, a Carcereira do Tártaro</strong>, que massacra com golpes em área e persegue obsessivamente qualquer filho de Perpétuo presente!
+            </div>
+          </div>
+
+          <!-- Sala 02: Catriona Cordella -->
+          <div class="p-6 rounded-xl bg-black/40 border border-red-500/40 space-y-3">
+            <span class="text-xs font-mono-code text-[#f1d27a] font-bold uppercase block">SALA 02 • CHEFE DE ANDAR</span>
+            <h4 class="font-cinzel text-lg font-bold text-white">Catriona Cordella (Lâmina Gélida)</h4>
+            <div class="text-xs font-mono-code text-gray-300 space-y-1">
+              <div><strong>Stats:</strong> 6.800 HP • 900 Mana • 310 SPD • 850 DEF • 1.200 ATK (60% Taxa / 160% Crit)</div>
+              <div><strong>Rolagem de Ação:</strong> 14d10 dificuldade 3</div>
+            </div>
+            <p class="text-xs font-garamond italic text-gray-300 leading-relaxed">
+              Mestre da precisão cirúrgica de gelo. Habilidades: <em>Geada Laminar</em> (+30 ATK gelo, ignora 50 DEF, aplica congelamento com -30 SPD), <em>Heartbreak</em> (drena 50 ATK e 100 Mana, forçando o alvo a trair seu grupo atacando o suporte), e <em>Garras de Cristal</em> (mergulho de grifo que imobiliza por 2 turnos).
+            </p>
+            <div class="text-xs text-gray-400 font-mono-code pt-2 border-t border-white/10">
+              * Acompanhada por 3x Cavaleiros de Grifo Menores (1.200 HP cada) com Investida Aérea de dano duplicado em alvos imobilizados.
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Espólios do Abismo -->
+        <div class="p-5 rounded-xl bg-[#d4af37]/10 border border-[#d4af37]/30 flex flex-wrap items-center justify-between gap-4 text-xs font-mono-code">
+          <div class="space-x-2">
+            <span class="text-[#f1d27a] font-bold">RECOMPENSAS DO ABISMO 1.0:</span>
+            <span>+1.500 XP</span>
+            <span>• 600 Golds</span>
+            <span class="text-[#f1d27a] font-bold">• 30 Orações Celestiais</span>
+            <span>• 4 Artefatos Aleatórios</span>
+            <span>• 2x Joias do Destino</span>
+          </div>
+          <span class="text-emerald-400 font-bold">* 1x por mês • DOBRO na 1ª Conquista do Personagem!</span>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ==========================================================================
+         2. BERÇÁRIO ABISSAL 1.0 — O ÚTERO DO TÁRTARO (LÂMIA, MEDUSA & PORCA)
+         ========================================================================== -->
+    <section id="bercario-abissal" class="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-purple-500/20">
+      
+      <div class="text-center max-w-3xl mx-auto mb-12">
+        <span class="text-[10px] font-cinzel text-purple-400 uppercase tracking-widest font-bold">✦ O ÚTERO GERADOR DE MONSTROS DO TÁRTARO ✦</span>
+        <h2 class="font-cinzel-dec text-3xl sm:text-4xl font-bold text-white mt-1 mb-3">BERÇÁRIO ABISSAL 1.0</h2>
+        <p class="font-garamond italic text-base text-[#cfc7b4]">
+          A cratera viva pulsante onde monstros assassinados no mundo mortal se regeneram. Uma intervenção pragmática da Égide para conter semideuses descontrolados e colher dados vitais de batalha.
+        </p>
+      </div>
+
+      <!-- Regras Específicas do Berçário -->
+      <div class="glass-panel p-8 rounded-2xl border border-purple-500/40 mb-10 space-y-6">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 text-xs font-mono-code text-gray-300">
+          <div class="p-4 rounded bg-purple-950/40 border border-purple-500/40 space-y-1">
+            <div class="text-purple-300 font-bold">👥 LIMITE: MÁXIMO 4 AGENTES</div>
+            <p class="text-gray-300 font-garamond italic text-xs">O Limbo dos Primordiais possui ressonância etérea instável. Grupos com mais de <strong>4 integrantes</strong> provocam colapso dimensional e aniquilação imediata.</p>
+          </div>
+          <div class="p-4 rounded bg-black/40 border border-white/10 space-y-1">
+            <div class="text-purple-400 font-bold">🎖️ REQUISITO MÍNIMO</div>
+            <p class="text-gray-400 font-garamond italic text-xs">Acesso restrito a veteranos autorizados: exige <strong>Nível 7+</strong> para homologação de incursão pelo Conselho de Mármore.</p>
+          </div>
+          <div class="p-4 rounded bg-black/40 border border-white/10 space-y-1">
+            <div class="text-purple-400 font-bold">🎯 PRIORIDADE DE AGRESSÃO</div>
+            <p class="text-gray-400 font-garamond italic text-xs">Ordem predatória rígida: monstros atacam primeiro <strong>SUPORTE</strong> &gt; <strong>CARRY</strong> &gt; <strong>TANK</strong>. Iniciativa definida por SPD.</p>
+          </div>
+          <div class="p-4 rounded bg-black/40 border border-white/10 space-y-1">
+            <div class="text-purple-400 font-bold">⏳ COMBATE SEM DESCANSO</div>
+            <p class="text-gray-400 font-garamond italic text-xs">Os 3 chefes surgem em sequência contínua (Lâmia ➔ Medusa ➔ Porca Carmoniana). Dano excedente em invocações recai sobre a vida do mestre.</p>
+          </div>
+        </div>
+
+        <!-- 3 Modalidades de Risco -->
+        <div class="pt-4 border-t border-white/10">
+          <h4 class="font-cinzel text-xs font-bold text-[#f1d27a] uppercase mb-3">✦ 3 MODALIDADES DE RISCO</h4>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs font-mono-code">
+            <div class="p-4 rounded bg-white/5 border border-white/10">
+              <div class="text-white font-bold mb-1">1. Risco Veterano</div>
+              <p class="text-gray-400 font-garamond italic">Modo convencional sem alterações numéricas ou limite de turnos.</p>
+            </div>
+            <div class="p-4 rounded bg-amber-950/30 border border-amber-500/40">
+              <div class="text-amber-300 font-bold mb-1">2. Risco Lendário</div>
+              <p class="text-gray-300 font-garamond italic">Dois inimigos nas etapas 1 e 2. <strong>Limite de 5 rodadas</strong> ou morte instantânea pela fome do Berçário.</p>
+            </div>
+            <div class="p-4 rounded bg-red-950/40 border border-red-500/50">
+              <div class="text-red-300 font-bold mb-1">3. Risco Morte Súbita</div>
+              <p class="text-red-200 font-garamond italic">3 monstros nas etapas 1 e 2, e 2 na etapa 3. <strong>Limite de 2 rodadas</strong> por desafio. (Apenas Nível 10/13).</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Os 3 Inimigos Canônicos do Berçário -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-10">
+        
+        <!-- Inimigo 1: Lâmia -->
+        <div class="glass-panel p-6 rounded-xl border border-white/10 space-y-3">
+          <span class="text-[10px] font-mono-code text-purple-400 uppercase">1º DESAFIO • A RAINHA AMALDIÇOADA</span>
+          <h4 class="font-cinzel text-xl font-bold text-white">Lâmia da Líbia</h4>
+          <p class="text-xs text-gray-300 font-garamond italic leading-relaxed">
+            Ex-rainha deslumbrante cujos filhos foram mortos por ciúmes de Hera. Transformada em híbrido de mulher, serpente e lagarto, vaga consumindo juventude e esperança com canções hipnóticas que estilhaçam a mente e a determinação dos agentes.
+          </p>
+        </div>
+
+        <!-- Inimigo 2: Medusa -->
+        <div class="glass-panel p-6 rounded-xl border border-amber-500/30 space-y-3">
+          <span class="text-[10px] font-mono-code text-amber-400 uppercase">2º DESAFIO • O OLHAR PETRIFICANTE</span>
+          <h4 class="font-cinzel text-xl font-bold text-white">Medusa (Sempre Age Primeiro)</h4>
+          <p class="text-xs text-gray-300 font-garamond italic leading-relaxed">
+            Profanada no templo de Atena e punida injustamente com serpentes no lugar de cabelos e pele de escamas. Mantém rancor eterno contra heróis e divindades.
+          </p>
+          <div class="p-2 rounded bg-black/40 text-[11px] font-mono-code text-amber-300 border border-white/10">
+            Buffs: +1k a +5k HP e +50 a +200 DEF conforme o risco escolhido.
+          </div>
+        </div>
+
+        <!-- Inimigo 3: Porca Carmoniana -->
+        <div class="glass-panel p-6 rounded-xl border border-red-500/40 space-y-3 bg-red-950/20">
+          <span class="text-[10px] font-mono-code text-red-400 uppercase">3º DESAFIO • COLOSSO DE GAIA</span>
+          <h4 class="font-cinzel text-xl font-bold text-white">Porca Carmoniana (Sempre Age 1º)</h4>
+          <p class="text-xs text-gray-300 font-garamond italic leading-relaxed">
+            Javali titânico de 30 metros alimentado pelo sangue de campos profanados. Seu ventre inchado em contrações contínuas pare aberrações a cada rugido, calcificando o solo e multiplicando a desolação.
+          </p>
+          <div class="p-2 rounded bg-black/40 text-[11px] font-mono-code text-red-300 border border-white/10">
+            Buffs de Vida Titânicos: +120k HP (Veterano), +235k HP (Lendário) ou <strong>+370k HP e +400 DEF</strong> (Morte Súbita)!
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Recompensas do Berçário -->
+      <div class="p-6 rounded-xl bg-purple-950/30 border border-purple-500/30 flex flex-wrap items-center justify-between gap-4 text-xs font-mono-code">
+        <div class="space-x-2">
+          <span class="text-[#f1d27a] font-bold">ESPÓLIOS DO BERÇÁRIO:</span>
+          <span>+2.500 XP</span>
+          <span>• 900 Golds</span>
+          <span class="text-[#f1d27a] font-bold">• 30 a 60 Orações Celestiais</span>
+          <span>• 4 a 6 Artefatos</span>
+          <span>• 1 a 4 Joias do Destino</span>
+        </div>
+        <span class="text-gray-400 italic">Vencimento mensal (30/31 de cada mês) • Dádiva: 1 NPC de Psiquê/Eros disponível para preencher vaga.</span>
+      </div>
+
+    </section>
+
+    <!-- ==========================================================================
+         3. UNIVERSO SIMULADO & INCUBADORA DE FAMILIARES
+         ========================================================================== -->
+    <section id="universo-simulado" class="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-cyan-500/20">
+      <div class="text-center max-w-3xl mx-auto mb-12">
+        <span class="text-[10px] font-cinzel text-cyan-400 uppercase tracking-widest font-bold">✦ TECNOLOGIA DO ARQUIVISTA & A TORRE ✦</span>
+        <h2 class="font-cinzel-dec text-3xl sm:text-4xl font-bold text-white mt-1 mb-3">O UNIVERSO SIMULADO</h2>
+        <p class="font-garamond italic text-base text-[#cfc7b4]">
+          Realidade virtual transcendental nas águas do Tâmisa que simula cenários infinitos para testar builds e calibrar a incubação de ovos do Berçário Abissal.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
+        
+        <!-- Incubator Simulator Form -->
+        <div class="glass-panel p-8 rounded-2xl border border-purple-500/40 space-y-6">
+          <div class="flex items-center gap-3 mb-2">
+            <span class="text-2xl">🥚</span>
+            <h3 class="font-cinzel text-xl font-bold text-white uppercase">SIMULADOR DE INCUBAÇÃO RÚNICA</h3>
+          </div>
+
+          <div class="space-y-4">
+            <div>
+              <label class="block text-xs font-mono-code text-purple-300 uppercase mb-1">Selecione o Tipo de Ovo Abissal</label>
+              <select id="egg-type" class="w-full bg-[#050608]/90 border border-purple-500/30 rounded-lg px-4 py-2.5 text-xs font-mono-code text-white focus:outline-none focus:border-purple-400">
+                <option value="menor">Ovo das Sombras Menor (Comum - 24h)</option>
+                <option value="quimerico">Ovo Quimérico da Tempestade (Raro - 48h)</option>
+                <option value="abissal">Ovo do Titã Corrompido (Épico - 72h)</option>
+                <option value="cosmico">Ovo Cósmico do Caos (Lendário - 120h)</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="block text-xs font-mono-code text-purple-300 uppercase mb-1">Injeção de Essência Arcana (1 a 100 frascos)</label>
+              <input type="number" id="essence-amount" min="1" max="100" value="25" class="w-full bg-[#050608]/90 border border-purple-500/30 rounded-lg px-4 py-2 text-sm font-mono-code text-white focus:outline-none focus:border-purple-400">
+            </div>
+
+            <div>
+              <label class="block text-xs font-mono-code text-purple-300 uppercase mb-1">Afinidade de Classe Patrona</label>
+              <select id="egg-affinity" class="w-full bg-[#050608]/90 border border-purple-500/30 rounded-lg px-4 py-2.5 text-xs font-mono-code text-white focus:outline-none focus:border-purple-400">
+                <option value="delirio">Delírio (Bônus de Ataque em Matilha)</option>
+                <option value="desespero">Desespero (Presença de Veneno/DoT)</option>
+                <option value="morte">Morte (Imunidade a Morte Instantânea)</option>
+                <option value="destruicao">Destruição (Fúria Berserk)</option>
+              </select>
+            </div>
+
+            <button type="button" id="calc-incubation-btn" class="w-full py-3.5 rounded-xl bg-purple-900/80 hover:bg-purple-800 border border-purple-400/50 text-white font-cinzel text-xs font-bold uppercase tracking-widest transition-all">
+              🧬 SIMULAR TAXA DE ECLOSÃO & MUTAÇÃO
+            </button>
+          </div>
+
+          <!-- Result Container -->
+          <div id="incubation-result" class="p-5 rounded-xl bg-[#050608]/90 border border-purple-500/20 font-mono-code text-xs space-y-2 text-purple-200">
+            <div class="text-[#f1d27a] font-bold">› AGUARDANDO PARÂMETROS BIOLÓGICOS...</div>
+            <div class="text-gray-400">Selecione o ovo e a quantidade de essência para calcular a pureza genética.</div>
+          </div>
+        </div>
+
+        <!-- Wave Calculator Simulation Box -->
+        <div class="glass-panel p-8 rounded-2xl border border-cyan-500/40 flex flex-col justify-between space-y-6">
+          <div>
+            <div class="flex items-center gap-3 mb-2">
+              <span class="text-2xl">🌌</span>
+              <h3 class="font-cinzel text-xl font-bold text-white uppercase">SIMULADOR DE ONDAS VIRTUAIS</h3>
+            </div>
+            <p class="font-garamond italic text-sm text-[#cfc7b4] leading-relaxed mb-6">
+              Avance pelas ondas de simulação para testar reações elementares e estimar suas recompensas de Cristais de Memória e Orações Celestiais da temporada.
+            </p>
+
+            <div class="space-y-4">
+              <div>
+                <label class="block text-xs font-mono-code text-cyan-300 uppercase mb-1">Onda Máxima Estimada (1 a 50)</label>
+                <input type="number" id="sim-wave-input" min="1" max="50" value="15" class="w-full bg-[#050608]/90 border border-cyan-500/30 rounded-lg px-4 py-2.5 text-sm font-mono-code text-white focus:outline-none focus:border-cyan-400">
+              </div>
+
+              <button type="button" id="calc-sim-wave-btn" class="btn-gold w-full py-3.5 rounded-xl text-xs font-bold uppercase tracking-wider">
+                CALCULAR ESPÓLIOS DA SIMULAÇÃO
+              </button>
+            </div>
+          </div>
+
+          <div id="sim-wave-output" class="p-5 rounded-xl bg-[#050608]/90 border border-cyan-500/20 font-mono-code text-xs text-cyan-200">
+            <div>› Onda 15: <strong>4.800 Pontos de Simulação</strong> • <strong>4x Cristais de Memória</strong> • <span class="text-[#f1d27a] font-bold">+8 Orações Celestiais</span></div>
+          </div>
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- ==========================================================================
+         4. REINO DO CAOS & FENDAS URBANAS DE LONDRES
+         ========================================================================== -->
+    <section id="reino-caos" class="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-red-500/20">
+      <div class="text-center max-w-3xl mx-auto mb-12">
+        <span class="text-[10px] font-cinzel text-red-500 uppercase tracking-widest font-bold">✦ PONTOS DE RUPTURA DO VÉU ✦</span>
+        <h2 class="font-cinzel-dec text-3xl sm:text-4xl font-bold text-white mt-1 mb-3">AS 4 FENDAS DO CAOS</h2>
+        <p class="font-garamond italic text-base text-[#cfc7b4]">
+          Distorções gravitacionais e temporais provocadas pelo despertar dos Fragmentos do Caos em solo londrino. Os índices percentuais indicam a intensidade da ruptura e a gravidade de contaminação etérea no lore da campanha.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        
+        <!-- Fenda 1 -->
+        <div class="glass-panel p-6 rounded-2xl border border-red-500/30">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-xs font-mono-code text-red-400 font-bold uppercase">FENDA 01 · SOHO DA MEIA-NOITE</span>
+            <span class="text-xs text-red-400">INSTABILIDADE: 88%</span>
+          </div>
+          <h3 class="font-cinzel text-lg font-bold text-white mb-2">O Beco das Vozes Perdidas</h3>
+          <p class="font-garamond italic text-sm text-[#cfc7b4] leading-relaxed mb-3">
+            Ruas onde os reflexos nas poças d'água não pertencem aos transeuntes. Murmúrios arcaicos desorientam a mente mortal e induzem histeria coletiva.
+          </p>
+          <div class="text-[11px] font-mono-code text-gray-400">
+            › <strong>Ameaça:</strong> Sombras Vorazes & Ecos de Nêmesis.
+          </div>
+        </div>
+
+        <!-- Fenda 2 -->
+        <div class="glass-panel p-6 rounded-2xl border border-red-500/30">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-xs font-mono-code text-red-400 font-bold uppercase">FENDA 02 · DOCAS DO TÂMISA OCULTO</span>
+            <span class="text-xs text-red-400">INSTABILIDADE: 94%</span>
+          </div>
+          <h3 class="font-cinzel text-lg font-bold text-white mb-2">O Porto dos Afogados</h3>
+          <p class="font-garamond italic text-sm text-[#cfc7b4] leading-relaxed mb-3">
+            Embarcações fantasmas do século XIX ancoram em docas suprimidas pelo Véu. As águas sangram fogo fátuo e consomem o mana de quem se aproxima.
+          </p>
+          <div class="text-[11px] font-mono-code text-gray-400">
+            › <strong>Ameaça:</strong> Quimeras Marinhas & Keres Abissais.
+          </div>
+        </div>
+
+        <!-- Fenda 3 -->
+        <div class="glass-panel p-6 rounded-2xl border border-red-500/30">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-xs font-mono-code text-red-400 font-bold uppercase">FENDA 03 · CATEDRAL SUBTERRÂNEA</span>
+            <span class="text-xs text-red-400">INSTABILIDADE: 76%</span>
+          </div>
+          <h3 class="font-cinzel text-lg font-bold text-white mb-2">O Altar da Heresia Antiga</h3>
+          <p class="font-garamond italic text-sm text-[#cfc7b4] leading-relaxed mb-3">
+            Templo sepultado onde a gravidade opera invertida. Hereges e apóstolos realizam sacrifícios ritualísticos para quebrar a contenção da Égide.
+          </p>
+          <div class="text-[11px] font-mono-code text-gray-400">
+            › <strong>Ameaça:</strong> Bruxos Apóstatas & Inquisidores Renegados.
+          </div>
+        </div>
+
+        <!-- Fenda 4 -->
+        <div class="glass-panel p-6 rounded-2xl border border-red-500/30">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-xs font-mono-code text-red-400 font-bold uppercase">FENDA 04 · ILHAS DE SEMPRE INVERNO</span>
+            <span class="text-xs text-red-400">INSTABILIDADE: 99% ☠️</span>
+          </div>
+          <h3 class="font-cinzel text-lg font-bold text-white mb-2">A Fortaleza Congelada da Rainha Dragão</h3>
+          <p class="font-garamond italic text-sm text-[#cfc7b4] leading-relaxed mb-3">
+            O clímax imperial de Vanaheim. Ventos gélidos absolutos que congelam almas mortais e a presença vigilante de Rhaenys Targaryen e seu dragão sobre o Fragmento do Caos.
+          </p>
+          <div class="text-[11px] font-mono-code text-gray-400">
+            › <strong>Ameaça:</strong> Dragões Primordiais & O Fragmento Ômega.
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ==========================================================================
+       RODAPÉ EDITORIAL COMPLETO (DARK LUXURY) - PADRÃO OFICIAL NEOTHEON
+       ========================================================================== -->
+  <footer class="neotheon-global-footer">
+    <div class="footer-container">
+      
+      <!-- Top Grid: Brand & Lore + 3 Navigation Columns -->
+      <div class="footer-grid">
+        
+        <!-- Column 1: Brand, Crest & Lore -->
+        <div class="footer-brand-col">
+          <div class="footer-brand-badge">
+            <div class="brand-crest">N</div>
+            <div class="footer-brand-info">
+              <span class="footer-brand-title">NEOTHEON</span>
+              <span class="footer-brand-sub">Égide de Avalon · v2.5</span>
+            </div>
+          </div>
+          <p class="footer-lore-quote">
+            "Onde juramentos são mais fortes que sangue, e o silêncio sustenta o equilíbrio entre deuses e homens."
+          </p>
+          <div class="footer-status-pill">
+            <span class="status-pulse-dot"></span>
+            <span class="status-text">STATUS: VÉU ESTÁVEL // LONDRES, UK</span>
+          </div>
+        </div>
+
+        <!-- Column 2: O Universo & Crônicas -->
+        <div class="footer-nav-col">
+          <h4 class="footer-nav-heading">✦ O UNIVERSO</h4>
+          <ul class="footer-links-list">
+            <li><a href="index.html" class="footer-nav-link">Início (Temporada 2)</a></li>
+            <li><a href="universo.html" class="footer-nav-link">Universo & Cosmologia</a></li>
+            <li><a href="universo.html#londres" class="footer-nav-link">Londres sob o Véu</a></li>
+            <li><a href="universo.html#egide" class="footer-nav-link">A Égide de Avalon</a></li>
+            <li><a href="universo.html#season1" class="footer-nav-link">Crônicas da Season 1</a></li>
+          </ul>
+        </div>
+
+        <!-- Column 3: Diretrizes & Sistema -->
+        <div class="footer-nav-col">
+          <h4 class="footer-nav-heading">✦ SISTEMA & JOGO</h4>
+          <ul class="footer-links-list">
+            <li><a href="sistema.html" class="footer-nav-link">Regras & Guia de Criação</a></li>
+            <li><a href="poderes.html" class="footer-nav-link">Poderes & Individualidades</a></li>
+            <li><a href="operacoes.html" class="footer-nav-link">Painel de Operações</a></li>
+            <li><a href="agente.html" class="footer-nav-link">Área do Agente & Fichas</a></li>
+            <li><a href="endgame.html" class="footer-nav-link text-red-400 hover:text-red-300">Zonas de Risco (Endgame)</a></li>
+          </ul>
+        </div>
+
+        <!-- Column 4: QG & Comunidade -->
+        <div class="footer-nav-col">
+          <h4 class="footer-nav-heading">✦ COMUNIDADE</h4>
+          <ul class="footer-links-list">
+            <li>
+              <a href="https://discord.gg/4vMxwCKwpg" target="_blank" rel="noopener noreferrer" class="footer-nav-link flex items-center gap-1.5 text-[#f1d27a] hover:text-white">
+                <span>Servidor Discord Oficial</span>
+                <span class="text-xs">↗</span>
+              </a>
+            </li>
+            <li>
+              <a href="https://yoble.us/Community/305085" target="_blank" rel="noopener noreferrer" class="footer-nav-link flex items-center gap-1.5 hover:text-white">
+                <span>Comunidade Yoble (305085)</span>
+                <span class="text-xs">↗</span>
+              </a>
+            </li>
+            <li>
+              <a href="https://discord.gg/4vMxwCKwpg" target="_blank" rel="noopener noreferrer" class="footer-nav-link flex items-center gap-1.5 hover:text-white">
+                <span>Mesas de Sexta no Roll20</span>
+                <span class="text-xs">↗</span>
+              </a>
+            </li>
+            <li>
+              <a href="https://discord.gg/4vMxwCKwpg" target="_blank" rel="noopener noreferrer" class="footer-nav-link flex items-center gap-1.5 hover:text-white">
+                <span>Inscrições de Missões</span>
+                <span class="text-xs">↗</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+      </div>
+
+      <!-- Bottom Bar: Legal, Rights & Disclaimer -->
+      <div class="footer-bottom-bar">
+        <div class="footer-copyright">
+          © 2026 NEOTHEON RPG — Todos os direitos reservados sob a Égide de Avalon.
+        </div>
+        <div class="footer-disclaimer">
+          Neotheon é um projeto de RPG colaborativo sem fins lucrativos, criado exclusivamente para entretenimento e ficção.
+        </div>
+      </div>
+
+    </div>
+  </footer>
+
+  <!-- Core Script -->
+  <script src="app.js"></script>
+</body>
+</html>
